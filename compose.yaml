@@ -1,0 +1,21 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: apiPlatform_postgres_db
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: '!ChangeMe!'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - symfony_network
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+
+networks:
+  symfony_network:
+    driver: bridge
