@@ -7,11 +7,15 @@ use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['book:read']],
+    denormalizationContext: ['groups' => ['book:write']],
+)]
 #[UniqueEntity(fields: ['isbn'])]
 class Book
 {
@@ -23,20 +27,24 @@ class Book
 
     #[ORM\Column(length: 13, unique: true, nullable: true)]
     #[Assert\Isbn]
+    #[Groups(['book:read', 'book:write'])]
     private ?string $isbn = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
+    #[Groups(['book:read', 'book:write'])]
     private \DateTimeImmutable $publishedAt;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(max: 255)]
     #[Assert\NotBlank]
+    #[Groups(['book:read', 'book:write'])]
     private string $title;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(max: 255)]
     #[Assert\NotBlank]
+    #[Groups(['book:read', 'book:write'])]
     private string $author;
 
     public function getId(): ?Uuid
