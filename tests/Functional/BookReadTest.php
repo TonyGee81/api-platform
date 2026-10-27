@@ -8,7 +8,7 @@ use ApiPlatform\Test\ApiTestCase;
 use App\Entity\Book;
 use App\Factory\BookFactory;
 
-final class BookTest extends ApiTestCase
+final class BookReadTest extends ApiTestCase
 {
     public function testGetBookReturnsItemWithoutId(): void
     {
