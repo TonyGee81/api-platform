@@ -76,4 +76,38 @@ final class BookWriteTest extends ApiTestCase
         self::assertSame($bookCreationDate->format(DATE_ATOM), $content['createdAt']);
         self::assertSame($mockTime->now()->format(DATE_ATOM), $content['updatedAt']);
     }
+
+    public function testPostCreatesBookAndReturnsLocation(): void
+    {
+        $client = self::createClient();
+
+        $response = $client->request(
+            'POST',
+            '/api/books',
+            [
+                'headers' => [
+                    'content-type' => 'application/ld+json',
+                ],
+                'json' => [
+                    'isbn' => '978-2-25303146-8',
+                    'publishedAt' => '2026-10-27T09:41:22.589Z',
+                    'title' => 'Book title',
+                    'author' => 'Author of book'
+                ],
+            ],
+        );
+
+        self::assertResponseStatusCodeSame(201);
+        $content = $response->toArray();
+        BookFactory::repository()->assert()->count(
+            1,
+            [
+                'isbn' => '9782253031468',
+                'title' => 'Book title',
+                'author' => 'Author of book',
+            ]
+        );
+
+        self::assertResponseHeaderSame('location', $content['@id']);
+    }
 }
