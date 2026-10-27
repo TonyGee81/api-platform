@@ -41,6 +41,7 @@ final class BookFactory extends PersistentObjectFactory
             'author' => self::faker()->firstName() . ' ' . self::faker()->lastName(),
             'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'title' => self::faker()->sentence(4),
+            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
     }
 
